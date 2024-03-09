@@ -1,0 +1,71 @@
+<project name="hw02" basedir="."  default="clean" xmlns:ivy="antlib:org.apache.ivy.ant">
+    <property name="src" location="src" />
+    <property name="bin" location="bin" />
+    <property name="test.src" location="test/src" />
+    <property name="test.bin" location="test/bin" />
+    <property name="ivy.lib" location="lib"/>
+
+    <path id="classpath">
+        <pathelement location="${bin}" />
+        <pathelement location="${test.bin}" />
+        <fileset dir="${ivy.lib}"/>
+    </path>
+
+    <target name="init">
+        <mkdir dir="${bin}"/>
+        <mkdir dir="${test.bin}"/>
+        <mkdir dir="test/reports"/>
+        <mkdir dir="${ivy.lib}"/>
+        <echo message="CLASSPATH: ${toString:classpath}" />
+    </target>
+
+    <target name="resolve" depends="init"
+            description="--> Download JAR files (listed in ivy.xml) to the 'lib' directory.">
+        <ivy:retrieve/>
+    </target>
+
+    <target name="compile" depends="resolve">
+        <javac srcdir="${src}" destdir="${bin}" includeAntRuntime="no">
+            <classpath refid="classpath"/>
+            <include name="edu/umb/cs681/hw02/**/*.java"/>
+        </javac>
+        <javac srcdir="${test.src}" destdir="${test.bin}" includeAntRuntime="no">
+            <classpath refid="classpath"/>
+            <include name="edu/umb/cs681/hw02/**/*.java"/>
+        </javac>
+    </target>
+
+    <target name="test" depends="compile">
+        <junitlauncher   printSummary="true">
+            <classpath refid="classpath" />
+            <testclasses outputdir="test">
+                <fileset dir="${test.bin}">
+                    <include name="edu/umb/cs681/hw02/*Test.class"/>
+                </fileset>
+                <listener type="legacy-plain" sendSysOut="true"/>
+            </testclasses>
+        </junitlauncher>
+    </target>
+
+    <target name="run" depends="test">
+        <fileset dir="${bin}">
+            <include name="edu/umb/cs681/hw02/**/*.class"/>
+        </fileset>
+        <java classname="edu.umb.cs681.hw02.Transcript" fork="true">
+            <classpath refid="classpath"/>
+        </java>
+    </target>
+
+    <target name="clean" depends="run">
+        <delete includeemptydirs="true">
+            <fileset dir="${bin}/edu/umb/cs681/hw02" includes="**/*"/>
+            <fileset dir="${test.bin}/edu/umb/cs681/hw02" includes="**/*"/>
+            <fileset dir="${bin}/edu/umb/cs681/hw02" includes="**/*"/>
+        </delete>
+    </target>
+
+    <target name="clean-cache"
+            description="--> clean the ivy cache (by default ~/.ivy2/cache)">
+        <ivy:cleancache/>
+    </target>
+</project>
