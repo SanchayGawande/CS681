@@ -1,0 +1,23 @@
+Application Overview
+
+This application simulates a stock trading system where multiple traders (threads) buy shares from a limited stock pool. It highlights the differences between thread-unsafe and thread-safe implementations in a high concurrency environment.
+
+Original (Thread-Unsafe) Version, EnhansedStockTrader.java
+
+Description: Traders modify a shared available Shares count without synchronization, leading to race conditions where multiple threads read and write this shared variable concurrently.
+
+Race Condition(s):
+Concurrent Modifications: Simultaneous access leads to inconsistent outcomes and lost updates, as multiple threads overwrite each other's changes.
+
+Revised (Thread-Safe) Version, EnhansedSafeStockTrader.java
+
+Implements ReentrantLock to ensure that only one thread at a time can modify the availableShares, thereby synchronizing access.
+
+Resolution of Race Conditions:
+The lock provides mutual exclusion, preserving the integrity of availableShares by serializing access.
+Locks prevent lost updates and ensure that each transaction on shares is processed in a controlled sequence, maintaining accurate and up-to-date records.
+
+Conclusion
+The thread-safe implementation in EnhansedSafeStockTrader.java
+ensures all transactions are accurately recorded, crucial for maintaining consistency and preventing financial discrepancies in environments with concurrent access, such as financial systems.
+
