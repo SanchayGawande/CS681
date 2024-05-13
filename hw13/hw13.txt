@@ -1,0 +1,16 @@
+Hw13 - 
+
+This application simulates a stock trading system where multiple traders (threads) buy shares from a limited stock pool. It highlights the differences between thread-unsafe and thread-safe implementations.
+
+EnhancedStockTrader (Not Thread Safe):
+
+Does not use any synchronization mechanisms like locks. Multiple threads can access and modify availableShares simultaneously, leading to race conditions where the actual number of shares can get corrupted or reported incorrectly due to concurrent updates.
+The lack of synchronization mechanisms means the class can exhibit unpredictable behavior when used in a multithreaded environment.
+
+
+EnhancedSafeStockTrader (Thread Safe):
+
+Uses a ReentrantLock to ensure that only one thread at a time can modify the shared resource availableShares. This prevents race conditions.
+The done flag is volatile, ensuring that changes to this variable are immediately visible to all threads, which helps in controlling the execution flow accurately across threads.
+
+

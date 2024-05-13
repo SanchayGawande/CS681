@@ -1,0 +1,36 @@
+<project name="hw18" basedir="." default="clean" xmlns:ivy="antlib:org.apache.ivy.ant" >
+    <property name="project" value="hw18"/>
+    <property name="classname" value="Run"/>
+
+    <property name="src" value="src"/>
+    <property name="bin" value="bin"/>
+
+    <path id="classpath">
+        <pathelement location="${bin}"/>
+    </path>
+
+    <target name="init">
+        <mkdir dir="${bin}"/>
+    </target>
+
+    <target name="compile" depends="init">
+        <javac srcdir="${src}" destdir="${bin}" includeAntRuntime="no">
+            <classpath refid="classpath"/>
+            <include name="edu/umb/cs681/${project}/*.java"/>
+        </javac>
+    </target>
+
+    <target name="run" depends="compile">
+        <java classname="edu.umb.cs681.${project}.${classname}"
+              classpathref="classpath"
+              fork="true"/>
+
+    </target>
+
+    <target name="clean" depends="run">
+        <echo message="Delete class files" level="info"/>
+        <delete description="Delete class file">
+            <fileset dir="${bin}/edu/umb/cs681/${project}" includes="**/*"/>
+        </delete>
+    </target>
+</project>
